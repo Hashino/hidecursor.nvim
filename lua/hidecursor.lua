@@ -2,7 +2,7 @@
 -- Toggle cursor visibility for distraction-free reading.
 -- Provides the :ToggleCursor command.
 
-local M = {}
+local HideCursor = {}
 
 local saved_guicursor = nil
 
@@ -20,7 +20,7 @@ local function in_terminal()
   return vim.fn.has('gui_running') == 0
 end
 
-function M.hide()
+function HideCursor.hide()
   if is_hidden() then
     return
   end
@@ -38,7 +38,7 @@ function M.hide()
   end
 end
 
-function M.restore()
+function HideCursor.restore()
   if not is_hidden() then
     return
   end
@@ -52,16 +52,16 @@ function M.restore()
   end
 end
 
-function M.toggle()
+function HideCursor.toggle()
   if is_hidden() then
-    M.restore()
+    HideCursor.restore()
   else
-    M.hide()
+    HideCursor.hide()
   end
 end
 
-vim.api.nvim_create_user_command('ToggleCursor', M.toggle, {
+vim.api.nvim_create_user_command('ToggleCursor', HideCursor.toggle, {
   desc = 'Toggle cursor visibility',
 })
 
-return M
+return HideCursor
