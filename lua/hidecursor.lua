@@ -1,6 +1,6 @@
 -- hidecursor.nvim
 -- Toggle cursor visibility for distraction-free reading.
--- Provides the :ToggleCursor command.
+-- Provides the :ToggleCursor command and a configurable keymap.
 
 local HideCursor = {}
 
@@ -63,5 +63,29 @@ end
 vim.api.nvim_create_user_command('ToggleCursor', HideCursor.toggle, {
   desc = 'Toggle cursor visibility',
 })
+
+--- Configure the plugin.
+---@param opts? { keymap?: string|false }
+---  - keymap: key binding for Normal mode (default: '<leader>tc').
+---    Set to false to disable the default keymap.
+--- Configure the plugin and register a keymap.
+--- Call this in your config after requiring the plugin.
+---@param opts? { keymap?: string|false }
+---  - keymap: key binding for Normal mode (default: '<leader>tc').
+---    Set to false to disable the keymap.
+---@usage
+---  require('hidecursor').setup()                  -- uses '<leader>tc'
+---  require('hidecursor').setup({ keymap = '<A-c>' })  -- custom key
+---  require('hidecursor').setup({ keymap = false })     -- no keymap, use :ToggleCursor
+function HideCursor.setup(opts)
+  opts = opts or {}
+  local keymap = vim.F.if_nil(opts.keymap, '<leader>tc')
+
+  if keymap then
+    vim.keymap.set('n', keymap, function()
+      HideCursor.toggle()
+    end, { desc = '[T]oggle [C]ursor' })
+  end
+end
 
 return HideCursor
